@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(DatabaseConnectionHandler dbHandler) {
         this.dbHandler = dbHandler;
-        dbHandler.databaseSetup();
+//        dbHandler.databaseSetup();
         setJMenuBar(InitializeMenuBar());
         initializeMainPanel();
         splitPane.setDividerLocation(320);

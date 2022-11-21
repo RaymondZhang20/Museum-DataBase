@@ -51,8 +51,6 @@ public class DatabaseConnectionHandler {
     }
 
     public void databaseSetup() {
-        dropBranchTableIfExists();
-
         try {
             BufferedReader reader = new BufferedReader(new FileReader (new File("./src/script/setup.sql")));
             String         line = null;
@@ -75,26 +73,6 @@ public class DatabaseConnectionHandler {
             JOptionPane.showMessageDialog(new JFrame(), "Cannot find sql file");
         }  catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Fail to read sql file because:" + e.getMessage());
-        }
-    }
-
-    private void dropBranchTableIfExists() {
-        try {
-            String query = "select table_name from user_tables";
-            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()) {
-                if(rs.getString(1).toLowerCase().equals("branch")) {
-                    ps.execute("DROP TABLE branch");
-                    break;
-                }
-            }
-
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(new JFrame(), "Fail to drop existed table becuase:" + e.getMessage());
         }
     }
 
