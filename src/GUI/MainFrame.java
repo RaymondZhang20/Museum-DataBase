@@ -1,12 +1,14 @@
 package GUI;
 
+import database.DatabaseConnectionHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
+//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
 public class MainFrame extends JFrame {
     public static final int WIDTH = 1700;
     public static final int HEIGHT = 1000;
@@ -15,8 +17,11 @@ public class MainFrame extends JFrame {
     private List<TreePanel> treePanels = new ArrayList<>();
     private CardLayout cardLayout= new CardLayout();
     private JSplitPane splitPane;
+    private DatabaseConnectionHandler dbHandler;
 
-    public MainFrame() {
+    public MainFrame(DatabaseConnectionHandler dbHandler) {
+        this.dbHandler = dbHandler;
+        dbHandler.databaseSetup();
         setJMenuBar(InitializeMenuBar());
         initializeMainPanel();
         splitPane.setDividerLocation(320);
@@ -116,9 +121,5 @@ public class MainFrame extends JFrame {
             }
         });
         return menuBar;
-    }
-
-    public static void main(String[] args) {
-        new MainFrame();
     }
 }

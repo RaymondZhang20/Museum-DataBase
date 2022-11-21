@@ -1,21 +1,17 @@
-CREATE TABLE Museum (
-                          `Mid`  		int		NOT NULL PRIMARY KEY,
-                          `location`	varchar(80)	NOT NULL,
-                          `name`		varchar(50)	UNIQUE
-);
+CREATE TABLE Museum (Mid int NOT NULL PRIMARY KEY, location varchar(80) NOT NULL, Mname varchar(50) UNIQUE);
 
 CREATE TABLE ExhibitionHall (
-                                       `Zid`		int		PRIMARY KEY,
-                                       `floor`		char(10)	NOT NULL,
-                                       `isOpen`	bool		NOT NULL,
-                                       `name`		char(50)	UNIQUE,
-                                       `Mid`  	int		NOT NULL,
-                                       FOREIGN KEY (`Mid`) REFERENCES `Museum`(`Mid`) ON DELETE CASCADE
+                                       Zid		int		PRIMARY KEY,
+                                       floor	char(10)	NOT NULL,
+                                       isOpen	char(5)		NOT NULL,
+                                       Zname		char(50)	UNIQUE,
+                                       Mid  	int		NOT NULL,
+                                       FOREIGN KEY (Mid) REFERENCES Museum(Mid) ON DELETE CASCADE
 );
 
 CREATE TABLE Cinema (
                                Zid		int		NOT NULL PRIMARY KEY,
-                               floor		char(10)	NOT NULL,
+                               floor	char(10)	NOT NULL,
                                Mid		int		NOT NULL,
                                FOREIGN KEY (Mid) REFERENCES Museum(Mid) ON DELETE CASCADE
 );
@@ -30,14 +26,14 @@ CREATE TABLE GiftStore (
 CREATE TABLE Activity (
                                  Aid		int		NOT NULL PRIMARY KEY,
                                  title		char(80)	UNIQUE,
-                                 `date`		date		NOT NULL,
+                                 Adate		char(15)		NOT NULL,
                                  Zid		int		NOT NULL,
                                  FOREIGN KEY (Zid) REFERENCES ExhibitionHall (Zid) ON DELETE CASCADE
 );
 
 CREATE TABLE Guide1 (
                         Gid		int		NOT NULL PRIMARY KEY,
-                        `name`		char(50)	UNIQUE,
+                        Gname		char(50)	UNIQUE,
                         field		char(50)	NOT NULL
 );
 
@@ -55,8 +51,8 @@ CREATE TABLE Exhibits2 (
 CREATE TABLE Exhibits3 (
                                                   Eid	int	 NOT NULL PRIMARY KEY,
                                                   birthplace	char(50),
-                                                  `year`		char(10),
-                                                  `name` 		char(50)	UNIQUE,
+                                                  Eyear		char(10),
+                                                  Ename 		char(50)	UNIQUE,
                                                   Mid		int			NOT NULL,
                                                   Gid		int			NOT NULL,
                                                   FOREIGN KEY (Mid) REFERENCES Museum(Mid) ON DELETE CASCADE,
@@ -70,16 +66,12 @@ CREATE TABLE Exhibits4 (
                                                   FOREIGN KEY (Zid) REFERENCES ExhibitionHall (Zid) ON DELETE CASCADE
 );
 
-CREATE TABLE Author1 (
-                                  Uid		int		NOT NULL PRIMARY KEY,
-                                  `name`		char(50),
-                                  nationality	char(50)
-);
+CREATE TABLE Author1 (Rid int NOT NULL PRIMARY KEY, Uname char(50), nation char(50));
 
 CREATE TABLE Author2 (
-                                  Uid		int		NOT NULL,
-                                  EID		int 	NOT NULL,
-                                  PRIMARY KEY (Uid, Eid),
+                                  Rid		int		NOT NULL,
+                                  Eid		int 	NOT NULL,
+                                  PRIMARY KEY (Rid, Eid),
                                   FOREIGN KEY (Eid) REFERENCES Exhibits3(Eid) ON DELETE CASCADE
 );
 
@@ -93,8 +85,8 @@ CREATE TABLE Participate (
 
 CREATE TABLE Film (
                       Fid		int	NOT NULL PRIMARY KEY,
-                      `time`		int	NOT NULL,
-                      `name`		char(50)	UNIQUE
+                      Ftime		int	NOT NULL,
+                      Fname		char(50)	UNIQUE
 );
 
 CREATE TABLE Play (
@@ -116,8 +108,8 @@ CREATE TABLE About (
 
 CREATE TABLE Souvenir (
                           Sid		int		NOT NULL PRIMARY KEY,
-                          `name`		char(50)	UNIQUE,
-                          price		double		NOT NULL
+                          Sname		char(50)	UNIQUE,
+                          price		decimal		NOT NULL
 );
 
 CREATE TABLE Sell(
@@ -135,13 +127,13 @@ INSERT INTO Museum   VALUES (1004, '1575 Alma St', 'Old Hastings Mill Store Muse
 INSERT INTO Museum   VALUES (1005, '2545 Blanca St', 'BC Golf Museum');
 INSERT INTO Museum   VALUES (1006, '680 17th St', 'West Vancouver Art Museum');
 
-INSERT INTO ExhibitionHall   VALUES (2011, 'ground', true, 'Hominin Hall', 1001);
-INSERT INTO ExhibitionHall   VALUES (2012, 'ground', true, 'Weather Alley', 1001);
-INSERT INTO ExhibitionHall   VALUES (2021, 'ground', true, 'The Studio Hall', 1002);
-INSERT INTO ExhibitionHall   VALUES (2022, 'ground', true, 'Blue Whale Display Hall', 1002);
-INSERT INTO ExhibitionHall   VALUES (2041, 'ground', true, 'Heritage Hall', 1004);
-INSERT INTO ExhibitionHall   VALUES (2051, 'ground', true, 'Golf Hall of Fame', 1005);
-INSERT INTO ExhibitionHall   VALUES (2061, 'ground', true, 'Great Hall', 1006);
+INSERT INTO ExhibitionHall   VALUES (2011, 'ground', 'true', 'Hominin Hall', 1001);
+INSERT INTO ExhibitionHall   VALUES (2012, 'ground', 'true', 'Weather Alley', 1001);
+INSERT INTO ExhibitionHall   VALUES (2021, 'ground', 'true', 'The Studio Hall', 1002);
+INSERT INTO ExhibitionHall   VALUES (2022, 'ground', 'true', 'Blue Whale Display Hall', 1002);
+INSERT INTO ExhibitionHall   VALUES (2041, 'ground', 'true', 'Heritage Hall', 1004);
+INSERT INTO ExhibitionHall   VALUES (2051, 'ground', 'true', 'Golf Hall of Fame', 1005);
+INSERT INTO ExhibitionHall   VALUES (2061, 'ground', 'true', 'Great Hall', 1006);
 
 INSERT INTO Cinema   VALUES (2110, 'ground', 1001);
 INSERT INTO Cinema   VALUES (2120, 'ground', 1002);
