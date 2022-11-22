@@ -53,15 +53,15 @@ CREATE TABLE Exhibits3 (
                                                   birthplace	char(50),
                                                   Eyear		char(10),
                                                   Ename 		char(50)	UNIQUE,
-                                                  Mid		int			NOT NULL,
+                                                  Zid		int			NOT NULL,
                                                   Gid		int			NOT NULL,
-                                                  FOREIGN KEY (Mid) REFERENCES Museum(Mid) ON DELETE CASCADE,
+                                                  FOREIGN KEY (Zid) REFERENCES ExhibitionHall(Zid) ON DELETE CASCADE,
                                                   FOREIGN KEY (Gid) REFERENCES Guide1(Gid) ON DELETE CASCADE
 );
 
 CREATE TABLE Exhibits4 (
-                                                  Mid		int		NOT NULL PRIMARY KEY,
-                                                  Zid		int 	NOT NULL,
+                                                  Mid		int		NOT NULL,
+                                                  Zid		int 	NOT NULL PRIMARY KEY,
                                                   FOREIGN KEY (Mid) REFERENCES Museum(Mid) ON DELETE CASCADE,
                                                   FOREIGN KEY (Zid) REFERENCES ExhibitionHall (Zid) ON DELETE CASCADE
 );
@@ -128,14 +128,14 @@ INSERT INTO Museum   VALUES (1004, '1575 Alma St', 'Old Hastings Mill Store Muse
 INSERT INTO Museum   VALUES (1005, '2545 Blanca St', 'BC Golf Museum');
 INSERT INTO Museum   VALUES (1006, '680 17th St', 'West Vancouver Art Museum');
 
-INSERT INTO ExhibitionHall   VALUES (2011, 'ground', true, 'Hominin Hall', 1001);
-INSERT INTO ExhibitionHall   VALUES (2012, 'ground', true, 'Weather Alley', 1001);
-INSERT INTO ExhibitionHall   VALUES (2021, 'ground', true, 'The Studio Hall', 1002);
-INSERT INTO ExhibitionHall   VALUES (2022, 'ground', true, 'Blue Whale Display Hall', 1002);
-INSERT INTO ExhibitionHall   VALUES (2031, 'ground', true, 'Great Hall', 1003);
-INSERT INTO ExhibitionHall   VALUES (2041, 'ground', true, 'Heritage Hall', 1004);
-INSERT INTO ExhibitionHall   VALUES (2051, 'ground', true, 'Golf Hall of Fame', 1005);
-INSERT INTO ExhibitionHall   VALUES (2061, 'ground', true, 'Main Exhibition Hall', 1006);
+INSERT INTO ExhibitionHall   VALUES (2011, 'ground', 'true', 'Hominin Hall', 1001);
+INSERT INTO ExhibitionHall   VALUES (2012, 'ground', 'true', 'Weather Alley', 1001);
+INSERT INTO ExhibitionHall   VALUES (2021, 'ground', 'true', 'The Studio Hall', 1002);
+INSERT INTO ExhibitionHall   VALUES (2022, 'ground', 'true', 'Blue Whale Display Hall', 1002);
+INSERT INTO ExhibitionHall   VALUES (2031, 'ground', 'true', 'Great Hall', 1003);
+INSERT INTO ExhibitionHall   VALUES (2041, 'ground', 'true', 'Heritage Hall', 1004);
+INSERT INTO ExhibitionHall   VALUES (2051, 'ground', 'true', 'Golf Hall of Fame', 1005);
+INSERT INTO ExhibitionHall   VALUES (2061, 'ground', 'true', 'Main Exhibition Hall', 1006);
 
 INSERT INTO Cinema   VALUES (2110, 'ground', 1001);
 INSERT INTO Cinema   VALUES (2120, 'ground', 1002);
@@ -153,7 +153,7 @@ INSERT INTO GiftStore    VALUES (2260, 'ground', 1006);
 
 INSERT INTO Activity    VALUES (4011, 'Welcome to your family reunion!', '2022-03-02', 2011);
 INSERT INTO Activity    VALUES (4021, 'Meet Big Blue!', '2010-05-01', 2022);
-INSERT INTO Activity    VALUES (4022, 'The Curious World of Seaweed', '2022-05-15', 2021)
+INSERT INTO Activity    VALUES (4022, 'The Curious World of Seaweed', '2022-05-15', 2021);
 INSERT INTO Activity    VALUES (4031, 'The Great Hall Renewal Project', '2020-12-29', 2031);
 INSERT INTO Activity    VALUES (4041, 'Vancouver in Fashion, the 1950s', '2022-04-09', 2041);
 INSERT INTO Activity    VALUES (4051, '125 Years of Women’s Golf in BC', '2017-10-18', 2051);
@@ -185,18 +185,18 @@ INSERT INTO Exhibits2   VALUES ('art', 9205);
 INSERT INTO Exhibits2   VALUES ('fashion', 9206);
 INSERT INTO Exhibits2   VALUES ('golf history', 9207);
 
-INSERT INTO Exhibits3   VALUES (6001, 'Nail Pond, Prince Edward Island, Canada', '2010', 'Big whale', 1002, 9201);
-INSERT INTO Exhibits3   VALUES (6002, NULL, NULL, 'Human Skull',1001, 9202);
-INSERT INTO Exhibits3   VALUES (6003, 'British Columbia, Canada', '1973', 'Eagle Harbour', 1006, 9203);
-INSERT INTO Exhibits3   VALUES (6004, 'British Columbia, Canada', '2000', 'Sculpture',1006, 9205);
-INSERT INTO Exhibits3   VALUES (6005, 'British Columbia, Canada', '1998', 'Girlfriend in a Coma', 1006, 9205);
-INSERT INTO Exhibits3   VALUES (6006, 'Canada', NULL, 'The Curious World of Seaweed', 1002, 9201);
-INSERT INTO Exhibits3   VALUES (6007, 'British Columbia, Canada', NULL , 'The Great Hall in Renewal', 1003, 9203);
-INSERT INTO Exhibits3   VALUES (6008, 'Canada', '1950', 'Outfit 1 of Women’s 1950s fashion', 1004, 9206);
-INSERT INTO Exhibits3   VALUES (6009, 'Canada', '1950', 'Outfit 2 of Women’s 1950s fashion', 1004, 9206);
-INSERT INTO Exhibits3   VALUES (6010, 'Canada', '1950', 'Outfit 3 of Women’s 1950s fashion', 1004, 9206);
-INSERT INTO Exhibits3   VALUES (6011, 'Canada', NULL, 'Golf trophies', 1005, 9207);
-INSERT INTO Exhibits3   VALUES (6012, 'Canada', NULL, 'Golf clothing 125 years ago', 1005, 9207);
+INSERT INTO Exhibits3   VALUES (6001, 'Nail Pond, Prince Edward Island, Canada', '2010', 'Big whale', 2022, 9201);
+INSERT INTO Exhibits3   VALUES (6002, NULL, NULL, 'Human Skull',2011, 9202);
+INSERT INTO Exhibits3   VALUES (6003, 'British Columbia, Canada', '1973', 'Eagle Harbour', 2061, 9203);
+INSERT INTO Exhibits3   VALUES (6004, 'British Columbia, Canada', '2000', 'Sculpture',2061, 9205);
+INSERT INTO Exhibits3   VALUES (6005, 'British Columbia, Canada', '1998', 'Girlfriend in a Coma', 2061, 9205);
+INSERT INTO Exhibits3   VALUES (6006, 'Canada', NULL, 'The Curious World of Seaweed', 2021, 9201);
+INSERT INTO Exhibits3   VALUES (6007, 'British Columbia, Canada', NULL , 'The Great Hall in Renewal', 2031, 9203);
+INSERT INTO Exhibits3   VALUES (6008, 'Canada', '1950', 'Outfit 1 of Women’s 1950s fashion', 2041, 9206);
+INSERT INTO Exhibits3   VALUES (6009, 'Canada', '1950', 'Outfit 2 of Women’s 1950s fashion', 2041, 9206);
+INSERT INTO Exhibits3   VALUES (6010, 'Canada', '1950', 'Outfit 3 of Women’s 1950s fashion', 2041, 9206);
+INSERT INTO Exhibits3   VALUES (6011, 'Canada', NULL, 'Golf trophies', 2051, 9207);
+INSERT INTO Exhibits3   VALUES (6012, 'Canada', NULL, 'Golf clothing 125 years ago', 2051, 9207);
 
 INSERT INTO Exhibits4   VALUES (1001, 2011);
 INSERT INTO Exhibits4   VALUES (1001, 2012);

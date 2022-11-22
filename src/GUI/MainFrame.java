@@ -36,13 +36,13 @@ public class MainFrame extends JFrame {
         mainPanel.setLayout(cardLayout);
         String[][] TreeInitial = {{"Museum"},
                                   {"Activity", "Museum"},
-                                  {"Exhibit", "Museum"},
+                                  {"Exhibits2", "Museum"},
                                   {"Film", "Museum"},
                                   {"Souvenir", "Museum"}};
         for (int i = 0; i < 5; i++) {
             JPanel curr = new JPanel();
             treePanels.add(new TreePanel(TreeInitial[i]));
-            tablesPanels.add(new TablePanel());
+            tablesPanels.add(new TablePanel(dbHandler, TreeInitial[i][0]));
             splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treePanels.get(i),tablesPanels.get(i));
             curr.add(splitPane);
             splitPane.setOneTouchExpandable(true);

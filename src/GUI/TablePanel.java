@@ -1,5 +1,7 @@
 package GUI;
 
+import database.DatabaseConnectionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -12,13 +14,35 @@ public class TablePanel extends JPanel {
     private Vector<String> titles;
     private Vector<Vector> tableData;
     private DefaultTableModel tableModel;
+    private DatabaseConnectionHandler dbHandler;
 
-    public TablePanel() {
+    public TablePanel(DatabaseConnectionHandler dbHandler, String tableName) {
+        this.dbHandler = dbHandler;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-//        setBackground(Color.BLUE);
         setLayout(new BorderLayout());
         initializeTable();
         add(initializeButtons(),BorderLayout.NORTH);
+        Vector<Vector> all = dbHandler.getRows(tableName);
+        titles = all.get(0);
+        all.remove(0);
+        tableData = all;
+//        for (Vector<String> vector:tableData){
+//            for (String s: vector) {
+//                System.out.println(s);
+//            }
+//        }
+        tableModel = new DefaultTableModel(tableData,titles);
+        table = new JTable(tableModel){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFont(new Font("TimesRoman", Font.PLAIN, 17));
+        table.getTableHeader().setFont(new Font("TimesRoman", Font.BOLD, 18));
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane);
     }
 
     private JPanel initializeButtons() {

@@ -4,10 +4,9 @@ import util.PrintablePreparedStatement;
 
 import javax.swing.*;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class DatabaseConnectionHandler {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
@@ -74,6 +73,33 @@ public class DatabaseConnectionHandler {
         }  catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Fail to read sql file because:" + e.getMessage());
         }
+    }
+
+    public Vector<Vector> getRows(String table) {
+        Vector<Vector> result = new Vector<>();
+        try {
+            String query = "SELECT * FROM " + table;
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            result.add(new Vector<>());
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                result.get(0).add(rsmd.getColumnName(i));
+            }
+            int index = 1;
+            while(rs.next()) {
+                for (int i=1; i<=rsmd.getColumnCount(); i++) {
+                    result.add(new Vector<>());
+                    result.get(index).add(rs.getString(i));
+                }
+                index++;
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to get rows from table " + table + " because: " + e.getMessage());
+        }
+        return result;
     }
 
     private void rollbackConnection() {
