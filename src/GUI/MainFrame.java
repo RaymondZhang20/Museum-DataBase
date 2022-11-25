@@ -13,10 +13,7 @@ public class MainFrame extends JFrame {
     public static final int WIDTH = 1700;
     public static final int HEIGHT = 1000;
     private JPanel mainPanel = new JPanel();
-    private List<TablePanel> tablesPanels = new ArrayList<>();
-    private List<TreePanel> treePanels = new ArrayList<>();
     private CardLayout cardLayout= new CardLayout();
-    private JSplitPane splitPane;
     private DatabaseConnectionHandler dbHandler;
 
     public MainFrame(DatabaseConnectionHandler dbHandler) {
@@ -24,7 +21,6 @@ public class MainFrame extends JFrame {
 //        dbHandler.databaseSetup();
         setJMenuBar(InitializeMenuBar());
         initializeMainPanel();
-        splitPane.setDividerLocation(320);
         setTitle("Museum Data Management");
         setSize(WIDTH,HEIGHT);
         setLocationRelativeTo(null);
@@ -34,19 +30,9 @@ public class MainFrame extends JFrame {
 
     private void initializeMainPanel() {
         mainPanel.setLayout(cardLayout);
-        String[][] TreeInitial = {{"Museum"},
-                                  {"Activity", "Museum"},
-                                  {"Exhibits2", "Museum"},
-                                  {"Film", "Museum"},
-                                  {"Souvenir", "Museum"}};
+        String[] TreeInitial = {"Museum", "Activity", "Exhibits2", "Film", "Souvenir"};
         for (int i = 0; i < 5; i++) {
-            JPanel curr = new JPanel();
-            treePanels.add(new TreePanel(TreeInitial[i]));
-            tablesPanels.add(new TablePanel(dbHandler, TreeInitial[i][0]));
-            splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treePanels.get(i),tablesPanels.get(i));
-            curr.add(splitPane);
-            splitPane.setOneTouchExpandable(true);
-            mainPanel.add("p" + i,curr);
+            mainPanel.add("p" + i,new InformationPanel(TreeInitial[i], dbHandler));
         }
         this.add(mainPanel);
     }

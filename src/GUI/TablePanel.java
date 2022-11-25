@@ -16,13 +16,13 @@ public class TablePanel extends JPanel {
     private DefaultTableModel tableModel;
     private DatabaseConnectionHandler dbHandler;
 
-    public TablePanel(DatabaseConnectionHandler dbHandler, String tableName) {
+    public TablePanel(DatabaseConnectionHandler dbHandler, String query) {
         this.dbHandler = dbHandler;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setLayout(new BorderLayout());
         initializeTable();
         add(initializeButtons(),BorderLayout.NORTH);
-        Vector<Vector> all = dbHandler.getRows(tableName);
+        Vector<Vector> all = dbHandler.getContents(query);
         titles = all.get(0);
         all.remove(0);
         tableData = all;

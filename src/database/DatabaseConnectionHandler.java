@@ -75,10 +75,28 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public Vector<Vector> getRows(String table) {
+    public ArrayList<String> getMuseumNames() {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            String query = "SELECT Mname FROM Museum";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+            int index = 0;
+            while(rs.next()) {
+                result.add(rs.getString("Mname"));
+                index++;
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to get museum names because: " + e.getMessage());
+        }
+        return result;
+    }
+
+    public Vector<Vector> getContents(String query) {
         Vector<Vector> result = new Vector<>();
         try {
-            String query = "SELECT * FROM " + table;
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ResultSet rs = ps.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -97,7 +115,7 @@ public class DatabaseConnectionHandler {
             rs.close();
             ps.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(new JFrame(), "Fail to get rows from table " + table + " because: " + e.getMessage());
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to get content because: " + e.getMessage());
         }
         return result;
     }
