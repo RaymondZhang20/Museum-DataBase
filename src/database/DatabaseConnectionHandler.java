@@ -8,9 +8,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
+/**
+ * This class handles all database related transactions
+ */
 public class DatabaseConnectionHandler {
+    // Use this version of the ORACLE_URL if you are running the code off of the server
+//	private static final String ORACLE_URL = "jdbc:oracle:thin:@dbhost.students.cs.ubc.ca:1522:stu";
+    // Use this version of the ORACLE_URL if you are tunneling into the undergrad servers
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
-    private Connection connection;
+
+    private Connection connection = null;
 
     public DatabaseConnectionHandler() {
         try {
@@ -18,7 +25,7 @@ public class DatabaseConnectionHandler {
             // Note that the path could change for new drivers
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -28,7 +35,7 @@ public class DatabaseConnectionHandler {
                 connection.close();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -51,7 +58,7 @@ public class DatabaseConnectionHandler {
 
     public void databaseSetup() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader (new File("./src/script/setup.sql")));
+            BufferedReader reader = new BufferedReader(new FileReader(new File("./src/script/setup.sql")));
             String         line = null;
             StringBuffer sb = new StringBuffer();
             BufferedReader br = new BufferedReader(reader);
@@ -75,6 +82,39 @@ public class DatabaseConnectionHandler {
         }
     }
 
+    public void remove(String table, int id) {
+        String query = "";
+        try {
+            switch (table) {
+                case "Activity":
+                    query = "DELETE FROM Activity WHERE AID = ?";
+                    break;
+                case "Film":
+                    query = "DELETE FROM Film WHERE FID = ?";
+                    break;
+                case "Souvenir":
+                    query = "DELETE FROM Souvenir WHERE SID = ?";
+                    break;
+            }
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                JOptionPane.showMessageDialog(new JFrame(), "The data does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+            JOptionPane.showMessageDialog(new JFrame(), "The data is successfully removed");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to remove the data because: " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
     public ArrayList<String> getMuseumNames() {
         ArrayList<String> result = new ArrayList<>();
         try {
@@ -90,6 +130,26 @@ public class DatabaseConnectionHandler {
             ps.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Fail to get museum names because: " + e.getMessage());
+        }
+        return result;
+    }
+
+    public ArrayList<String> getHallsInMuseum(String museum) {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            String query = "SELECT ZNAME FROM EXHIBITIONHALL, MUSEUM\n" +
+                    "WHERE EXHIBITIONHALL.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + museum + "\'";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+            int index = 0;
+            while(rs.next()) {
+                result.add(rs.getString("ZNAME"));
+                index++;
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to get halls in museum because: " + e.getMessage());
         }
         return result;
     }

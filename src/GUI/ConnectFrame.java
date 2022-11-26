@@ -14,6 +14,8 @@ public class ConnectFrame extends JFrame {
     JTextField password = new JPasswordField(15);
     private static final String USERNAME_RAYMOND = "ora_eiczxy20";
     private static final String PASSWORD_RAYMOND = "a25012923";
+    private static final String USERNAME_DOROTHY = "ora_yt12050";
+    private static final String PASSWORD_DOROTHY = "a26622993";
     JLabel usernameRemind = new JLabel("username is ora_<cwl>");
     JLabel passwordRemind = new JLabel("password is a<student ID>");
     private DatabaseConnectionHandler dbHandler;
@@ -33,8 +35,8 @@ public class ConnectFrame extends JFrame {
         usernameRemind.setForeground(Color.red);
         passwordRemind.setVisible(false);
         passwordRemind.setForeground(Color.red);
-        username.setText(USERNAME_RAYMOND);
-        password.setText(PASSWORD_RAYMOND);
+        username.setText(USERNAME_DOROTHY);
+        password.setText(PASSWORD_DOROTHY);
 
         Box uBox = Box.createHorizontalBox();
         uBox.add(Box.createHorizontalStrut(80));

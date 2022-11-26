@@ -39,42 +39,46 @@ public class InformationPanel extends JPanel implements TreeSelectionListener {
     private void initialTable(String s) {
         switch (s) {
             case "Museum":
-                tablePart.add("Museums", new TablePanel(dbHandler, "SELECT * FROM Museum"));
+                tablePart.add("Museums", new TablePanel(dbHandler, "SELECT * FROM Museum", null));
                 String[] museumNames =dbHandler.getMuseumNames().toArray(new String[dbHandler.getMuseumNames().size()]);
                 for (String mu : museumNames) {
                     tablePart.add("Activities_" + mu, new TablePanel(dbHandler,
                             "SELECT DISTINCT TITLE, ADATE AS Activity_Date, AID, ZNAME AS Location FROM Activity, Museum, EXHIBITIONHALL\n" +
-                                    "WHERE Activity.ZID = EXHIBITIONHALL.ZID AND EXHIBITIONHALL.MID = Museum.MID AND Museum.Mname = \'" + mu + "\'"));
+                                    "WHERE Activity.ZID = EXHIBITIONHALL.ZID AND EXHIBITIONHALL.MID = Museum.MID AND Museum.Mname = \'" + mu + "\'", null));
                     tablePart.add("Exhibition Halls_" + mu, new TablePanel(dbHandler,
                             "SELECT ZNAME AS Hall_Name, ZID AS Zoon_ID, ISOPEN, FLOOR FROM ExhibitionHall, Museum\n" +
-                                    "WHERE EXHIBITIONHALL.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'"));
+                                    "WHERE EXHIBITIONHALL.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'", null));
                     tablePart.add("Guides_" + mu, new TablePanel(dbHandler,
                             "SELECT DISTINCT GUIDE1.GID AS GID, GNAME AS Guide_name, GUIDE2.FIELD AS Field, OFFICE\n" +
                                     "FROM GUIDE1, GUIDE2, EXHIBITS3, EXHIBITS4, MUSEUM\n" +
                                     "WHERE GUIDE1.FIELD = GUIDE2.FIELD AND GUIDE1.GID = EXHIBITS3.GID AND\n" +
-                                    "      EXHIBITS3.ZID = EXHIBITS4.ZID AND EXHIBITS4.MID = MUSEUM.MID\n AND MUSEUM.MNAME = \'" + mu + "\'"));
+                                    "      EXHIBITS3.ZID = EXHIBITS4.ZID AND EXHIBITS4.MID = MUSEUM.MID\n AND MUSEUM.MNAME = \'" + mu + "\'", null));
                     tablePart.add("Exhibits_" + mu, new TablePanel(dbHandler,
                             "SELECT DISTINCT ENAME, BIRTHPLACE, EYEAR, CATEGORY FROM EXHIBITS2, EXHIBITS3, EXHIBITS4, MUSEUM\n" +
-                                    "WHERE EXHIBITS2.GID = EXHIBITS3.GID AND EXHIBITS3.ZID = EXHIBITS4.ZID AND EXHIBITS4.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'"));
+                                    "WHERE EXHIBITS2.GID = EXHIBITS3.GID AND EXHIBITS3.ZID = EXHIBITS4.ZID AND EXHIBITS4.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'", null));
                     tablePart.add("Films_" + mu, new TablePanel(dbHandler,
                             "SELECT DISTINCT FNAME, SHOWTIME, FILM.FID AS FID, FTIME AS TIME FROM FILM, PLAY, CINEMA, MUSEUM\n" +
-                                    "WHERE FILM.FID = PLAY.FID AND CINEMA.ZID = PLAY.ZID AND CINEMA.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'"));
+                                    "WHERE FILM.FID = PLAY.FID AND CINEMA.ZID = PLAY.ZID AND CINEMA.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'", null));
                     tablePart.add("Souvenirs_" + mu, new TablePanel(dbHandler,
                             "SELECT DISTINCT SNAME, PRICE, INVENTORY, SELL.SID AS SID FROM SOUVENIR, SELL, GIFTSTORE, MUSEUM\n" +
-                                    "WHERE SOUVENIR.SID = SELL.SID AND SELL.ZID = GIFTSTORE.ZID AND GIFTSTORE.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'"));
+                                    "WHERE SOUVENIR.SID = SELL.SID AND SELL.ZID = GIFTSTORE.ZID AND GIFTSTORE.MID = MUSEUM.MID AND MUSEUM.MNAME = \'" + mu + "\'", null));
                 }
                 break;
             case "Activity":
-                tablePart.add("Activities", new TablePanel(dbHandler, "SELECT * FROM Activity"));
+                tablePart.add("Activities", new TablePanel(dbHandler, "SELECT * FROM Activity", null));
                 break;
             case "Exhibit":
-
+                tablePart.add("Exhibits", new TablePanel(dbHandler, "SELECT ENAME, EID, BIRTHPLACE, EYEAR AS BIRTH_YEAR, CATEGORY FROM Exhibits2, Exhibits3, Exhibits4\n" +
+                        "WHERE EXHIBITS2.GID = EXHIBITS3.GID AND EXHIBITS4.ZID = EXHIBITS3.ZID", null));
                 break;
             case "Film":
-
+                tablePart.add("Films", new TablePanel(dbHandler, "SELECT DISTINCT FNAME, FTIME AS TIME, FILM.FID AS FID, ENAME AS ABOUT_EXHIBIT FROM Film, ABOUT, EXHIBITS3, PLAY\n" +
+                        "WHERE FILM.FID = ABOUT.FID AND ABOUT.EID = EXHIBITS3.EID AND FILM.FID = PLAY.FID", "Film"));
                 break;
             case "Souvenir":
-
+                tablePart.add("Souvenirs", new TablePanel(dbHandler, "SELECT SNAME, SOUVENIR.SID, PRICE, SUM(INVENTORY) AS TOTAL_INVENTORY FROM SOUVENIR, SELL\n" +
+                        "WHERE SOUVENIR.SID = SELL.SID\n" +
+                        "GROUP BY SNAME, PRICE, SOUVENIR.SID HAVING SOUVENIR.PRICE > 5", "Souvenir"));
                 break;
         }
     }
@@ -106,19 +110,23 @@ public class InformationPanel extends JPanel implements TreeSelectionListener {
     }
 
     private void SouvenirRoot(DefaultMutableTreeNode root) {
-
+        DefaultMutableTreeNode souvenirs = new DefaultMutableTreeNode("Souvenirs");
+        root.add(souvenirs);
     }
 
     private void FilmRoot(DefaultMutableTreeNode root) {
-
+        DefaultMutableTreeNode films = new DefaultMutableTreeNode("Films");
+        root.add(films);
     }
 
     private void ExhibitRoot(DefaultMutableTreeNode root) {
-
+        DefaultMutableTreeNode exhibits = new DefaultMutableTreeNode("Exhibits");
+        root.add(exhibits);
     }
 
     private void ActivityRoot(DefaultMutableTreeNode root) {
         DefaultMutableTreeNode activities = new DefaultMutableTreeNode("Activities");
+        root.add(activities);
     }
 
     private void MuseumRoot(DefaultMutableTreeNode root) {
@@ -169,7 +177,6 @@ public class InformationPanel extends JPanel implements TreeSelectionListener {
             default:
                 String event = e.getNewLeadSelectionPath().getParentPath().getLastPathComponent().toString() +
                         "_" + e.getNewLeadSelectionPath().getLastPathComponent().toString();
-                System.out.println(event);
                 cardLayout.show(tablePart, event);
         }
     }
