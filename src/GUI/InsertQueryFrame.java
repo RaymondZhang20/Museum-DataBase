@@ -275,6 +275,7 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
                         "WHERE ZNAME = \'" + AexhibitionHall + "\'");
                 dbhandler.insert("INSERT INTO Activity VALUES (" + Aid + ", \'" + title + "\', \'" +
                         Adate + "\', " + Zid + ")");
+                //here is the insert query!
                 main.dipo();
                 dispose();
                 break;

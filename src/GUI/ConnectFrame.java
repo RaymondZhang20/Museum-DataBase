@@ -35,8 +35,8 @@ public class ConnectFrame extends JFrame {
         usernameRemind.setForeground(Color.red);
         passwordRemind.setVisible(false);
         passwordRemind.setForeground(Color.red);
-        username.setText(USERNAME_DOROTHY);
-        password.setText(PASSWORD_DOROTHY);
+        username.setText(USERNAME_RAYMOND);
+        password.setText(PASSWORD_RAYMOND);
 
         Box uBox = Box.createHorizontalBox();
         uBox.add(Box.createHorizontalStrut(80));

@@ -82,6 +82,7 @@ public class TablePanel extends JPanel implements ActionListener {
             initializeData(query);
         } else {
             if (division.equals("Film")) {
+                //this is where we perform a division query
                 initializeData(query + " AND NOT EXISTS((SELECT ZID FROM CINEMA, MUSEUM WHERE CINEMA.MID = MUSEUM.MID" +
                         divideQuery + ") MINUS (SELECT ZID FROM PLAY WHERE PLAY.FID = F.FID))");
             } else if (division.equals("Souvenir")) {
