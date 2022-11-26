@@ -83,6 +83,7 @@ public class DatabaseConnectionHandler {
     }
 
     public void remove(String table, int id) {
+        //this is the function that performs delete query
         String query = "";
         try {
             switch (table) {
@@ -171,6 +172,7 @@ public class DatabaseConnectionHandler {
     }
 
     public void insert(String query) {
+        //this is the function that inserts a query
         try {
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
 
@@ -186,6 +188,7 @@ public class DatabaseConnectionHandler {
     }
 
     public void updateExhibit(int id, String name) {
+        //this is the method that performs update query
         try {
             String query = "UPDATE EXHIBITS3 SET ENAME = ? WHERE EID = ?";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
