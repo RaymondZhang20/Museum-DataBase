@@ -72,8 +72,8 @@ public class InformationPanel extends JPanel implements TreeSelectionListener {
                         "WHERE EXHIBITS2.GID = EXHIBITS3.GID AND EXHIBITS4.ZID = EXHIBITS3.ZID", null));
                 break;
             case "Film":
-                tablePart.add("Films", new TablePanel(dbHandler, "SELECT DISTINCT FNAME, FTIME AS TIME, FILM.FID AS FID, ENAME AS ABOUT_EXHIBIT FROM Film, ABOUT, EXHIBITS3, PLAY\n" +
-                        "WHERE FILM.FID = ABOUT.FID AND ABOUT.EID = EXHIBITS3.EID AND FILM.FID = PLAY.FID", "Film"));
+                tablePart.add("Films", new TablePanel(dbHandler, "SELECT DISTINCT FNAME, FTIME AS TIME, F.FID AS FID, ENAME AS ABOUT_EXHIBIT FROM Film F, ABOUT A, PLAY P, EXHIBITS3 E\n" +
+                        "WHERE F.FID = A.FID AND F.FID = P.FID AND A.EID = E.EID", "Film"));
                 break;
             case "Souvenir":
                 tablePart.add("Souvenirs", new TablePanel(dbHandler, "SELECT SNAME, SOUVENIR.SID, PRICE, SUM(INVENTORY) AS TOTAL_INVENTORY FROM SOUVENIR, SELL\n" +

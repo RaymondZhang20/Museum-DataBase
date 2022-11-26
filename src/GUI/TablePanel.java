@@ -83,7 +83,7 @@ public class TablePanel extends JPanel implements ActionListener {
         } else {
             if (division.equals("Film")) {
                 initializeData(query + " AND NOT EXISTS((SELECT ZID FROM CINEMA, MUSEUM WHERE CINEMA.MID = MUSEUM.MID" +
-                        divideQuery + ") MINUS (SELECT ZID FROM CINEMA WHERE PLAY.ZID = CINEMA.ZID))");
+                        divideQuery + ") MINUS (SELECT ZID FROM PLAY WHERE PLAY.FID = F.FID))");
             } else if (division.equals("Souvenir")) {
                 initializeData("SELECT SNAME, PRICE, SUM(INVENTORY) AS TOTAL_INVENTORY FROM SOUVENIR, SELL\n" +
                         "WHERE SOUVENIR.SID = SELL.SID AND NOT EXISTS((SELECT ZID FROM GIFTSTORE, MUSEUM\n" +
@@ -94,6 +94,5 @@ public class TablePanel extends JPanel implements ActionListener {
         }
         tableModel.setDataVector(tableData,titles);
         tableModel.fireTableDataChanged();
-        System.out.println(tableModel.getRowCount());
     }
 }

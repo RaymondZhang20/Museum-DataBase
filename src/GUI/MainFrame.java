@@ -50,6 +50,7 @@ public class MainFrame extends JFrame {
         JSeparator s1 = new JSeparator();
         JSeparator s2 = new JSeparator();
         JSeparator s3 = new JSeparator();
+        JSeparator s4 = new JSeparator();
         menu.add(quit);
         menu.add(save);
         menuBar.add(menu);
@@ -84,6 +85,11 @@ public class MainFrame extends JFrame {
         remove.add(remFilm);
         remove.add(remSouvenir);
         menuBar.add(remove);
+        menuBar.add(s4);
+        JMenu update = new JMenu("Update data");
+        JMenuItem updExhibit = new JMenuItem("Exhibit");
+        update.add(updExhibit);
+        menuBar.add(update);
 
         quit.addActionListener(new ActionListener() {
             @Override
@@ -131,7 +137,6 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(JOptionPane.showInputDialog(new JFrame(), "Input the AID of the activity you want to delete"));
                 dbHandler.remove("Activity", id);
-                new MainFrame(dbHandler);
                 dipo();
             }
         });
@@ -140,7 +145,6 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(JOptionPane.showInputDialog(new JFrame(), "Input the FID of the film you want to delete"));
                 dbHandler.remove("Film", id);
-                new MainFrame(dbHandler);
                 dipo();
             }
         });
@@ -149,14 +153,31 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(JOptionPane.showInputDialog(new JFrame(), "Input the SID of the souvenir you want to delete"));
                 dbHandler.remove("Souvenir", id);
-                new MainFrame(dbHandler);
                 dipo();
             }
         });
         this.setJMenuBar(menuBar);
+        addActivity.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new InsertQueryFrame("Activity", dbHandler, returnThis());
+            }
+        });
+        updExhibit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int Eid = Integer.parseInt(JOptionPane.showInputDialog(new JFrame(), "input the EID of the exhibit you want ot update"));
+                String name = JOptionPane.showInputDialog(new JFrame(), "input the new name of the exhibit");
+                dbHandler.updateExhibit(Eid, name);
+                dipo();
+            }
+        });
     }
 
-    private void dipo() {
+    public void dipo() {
+        new MainFrame(dbHandler);
         this.dispose();
     }
+
+    private MainFrame returnThis() {return this;}
 }

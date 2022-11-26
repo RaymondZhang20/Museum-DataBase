@@ -154,6 +154,58 @@ public class DatabaseConnectionHandler {
         return result;
     }
 
+    public int getId(String query) {
+        int result = 0;
+        try {
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                result = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to get ID of the hall because: " + e.getMessage());
+        }
+        return result;
+    }
+
+    public void insert(String query) {
+        try {
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+            JOptionPane.showMessageDialog(new JFrame(), "The data is successfully added");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to insert because: " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    public void updateExhibit(int id, String name) {
+        try {
+            String query = "UPDATE EXHIBITS3 SET ENAME = ? WHERE EID = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, name);
+            ps.setInt(2, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                JOptionPane.showMessageDialog(new JFrame(), "The exhibit does not exist");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Fail to update because:  " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
     public Vector<Vector> getContents(String query) {
         Vector<Vector> result = new Vector<>();
         try {

@@ -6,20 +6,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Date;
 
 public class InsertQueryFrame extends JFrame implements ActionListener {
     private final DatabaseConnectionHandler dbhandler;
-    private String[] Museums = {"India","Aus","U.S.A","England","Newzealand", "China"};
-    private String[] ExhibitionHall = {"India","Aus","U.S.A","England"};
+    private String[] Museums;
+    private String[] ExhibitionHall = {};
 //    private String[] Museums = (String[]) dbhandler.getMuseumNames().toArray();
 
     //or retrieve from database and
     private JTextField ActivityAid = new JTextField(10);
     private JTextField ActivityTitle = new JTextField(80);
     private JTextField ActivityDate = new JTextField(15);
-    private JComboBox ActivityMuseumDropDown = new JComboBox(Museums);
-    private JComboBox ActivityExhibitionHallDropDown = new JComboBox(ExhibitionHall);
+    private JComboBox ActivityMuseumDropDown;
+    private JComboBox ActivityExhibitionHallDropDown;
 
 
     private JTextField ExhibitsEid = new JTextField(10);
@@ -29,8 +31,8 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
     private JTextField ExhibitsCategory = new JTextField(50);
     private JTextField ExhibitsGid = new JTextField(10);
 
-    private JComboBox ExhibitsMuseumDropDown = new JComboBox(Museums);
-    private JComboBox ExhibitsExhibitionHallDropDown = new JComboBox(ExhibitionHall);
+    private JComboBox ExhibitsMuseumDropDown;
+    private JComboBox ExhibitsExhibitionHallDropDown;
 
 //    private JTextField GuideGid;
 //    private JTextField GuideName;
@@ -58,18 +60,20 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
     private static final String ADD_FILM_ACTION = "ADD_FILM_ACTION";
     private static final String SOUVENIR_MORE_ACTION = "SOUVENIR_MORE_ACTION";
     private static final String FILM_MORE_ACTION = "FILM_MORE_ACTION";
+    private MainFrame main;
 
 
-    public InsertQueryFrame(String tableName, DatabaseConnectionHandler dbhandler){
+    public InsertQueryFrame(String tableName, DatabaseConnectionHandler dbhandler, MainFrame main){
         super("Insert data");
+        this.main = main;
         this.dbhandler = dbhandler;
+        this.Museums = dbhandler.getMuseumNames().toArray(new String[0]);
+        ActivityMuseumDropDown = new JComboBox(Museums);
+
         this.tableName = tableName;
         switch (tableName) {
             case "Activity":
                 this.setActivityLabelsFieldsButtons();
-                break;
-            case "Exhibits":
-                this.setExhibitsLabelsFieldsButtons();
                 break;
             case "Souvenir":
                 this.setSouvenirLabelsFieldsButtons();
@@ -141,44 +145,27 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
         ActivityMuseumDropDown.setForeground(Color.darkGray);
 
         addTextLabel("Select Exhibition Hall: ", 280, 300);
+        ActivityExhibitionHallDropDown = new JComboBox(ExhibitionHall);
 
         ActivityExhibitionHallDropDown.setBounds(50, 310,300,20);
+        ActivityMuseumDropDown.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                ActivityExhibitionHallDropDown.removeAllItems();
+                String s = (String) ActivityMuseumDropDown.getSelectedItem();
+                for (String s1 : dbhandler.getHallsInMuseum(s)) {
+                    ActivityExhibitionHallDropDown.addItem(s1);
+                }
+//                ActivityExhibitionHallDropDown = new JComboBox(dbhandler.getHallsInMuseum(s).toArray());
+//                ActivityExhibitionHallDropDown.setBounds(50, 310,300,20);
+//                add(ActivityExhibitionHallDropDown);
+//                ActivityExhibitionHallDropDown.setForeground(Color.darkGray);
+            }
+        });
         add(ActivityExhibitionHallDropDown);
         ActivityExhibitionHallDropDown.setForeground(Color.darkGray);
 
         addFinalButton("Add this activity!", 340, ADD_ACTIVITY_ACTION);
-    }
-
-
-    private void setExhibitsLabelsFieldsButtons() {
-        setPreferredSize(new Dimension(480, 660));
-        setLayout(null);
-
-        addTextLabel("Enter Exhibits ID: ", 40, 350);
-        addTextField(ExhibitsEid, 70);
-        addTextLabel("Enter Exhibits Name: ", 100, 350);
-        addTextField(ExhibitsName, 130);
-        addTextLabel("Enter Exhibits Birthplace: ", 160, 350);
-        addTextField(ExhibitsBirthplace, 190);
-        addTextLabel("Enter Exhibits Year: ", 220, 350);
-        addTextField(ExhibitsYear, 250);
-        addTextLabel("Enter Exhibits category: ", 280, 400);
-        addTextField(ExhibitsCategory, 310);
-        addTextLabel("Enter Gid of the guide responsible: ", 340, 400);
-        addTextField(ExhibitsGid, 370);
-        addTextLabel("Select Museum: ", 400, 300);
-
-        ExhibitsMuseumDropDown.setBounds(50, 430,300,20);
-        add(ExhibitsMuseumDropDown);
-        ExhibitsMuseumDropDown.setForeground(Color.darkGray);
-
-        addTextLabel("Select Exhibition Hall: ", 460, 300);
-
-        ExhibitsExhibitionHallDropDown.setBounds(50, 490,300,20);
-        add(ExhibitsExhibitionHallDropDown);
-        ExhibitsExhibitionHallDropDown.setForeground(Color.darkGray);
-
-        addFinalButton("Add this Exhibit!", 540, ADD_EXHIBIT_ACTION);
     }
 
     private void setSouvenirLabelsFieldsButtons() {
@@ -283,65 +270,13 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
                     return;
                 }
 
-                String Amuseum = (String) ActivityMuseumDropDown.getItemAt(ActivityMuseumDropDown.getSelectedIndex());
                 String AexhibitionHall = (String) ActivityExhibitionHallDropDown.getItemAt(ActivityExhibitionHallDropDown.getSelectedIndex());
-
-
-                JOptionPane.showMessageDialog(null,
-                         " Aid: " + Aid +"title: " + title + " Adate: "
-                                 + Adate + " Museum: "+Amuseum + " ExhibtionHall: "+ AexhibitionHall);
-                break;
-            case ADD_EXHIBIT_ACTION:
-                if (ExhibitsEid.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Your activity must have an Eid!");
-                    return;
-                }
-                Integer Eid = null;
-                try {
-                    Eid = Integer.parseInt(ExhibitsEid.getText());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage() + "is not a valid Eid!");
-                    return;
-                }
-                String Ename = ExhibitsName.getText();
-                if (Ename.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Your Exhibit must have a name!");
-                    return;
-                }
-                String birthplace = ExhibitsBirthplace.getText();
-                String Eyear = ExhibitsYear.getText();
-                try {
-                    if (!Eyear.isEmpty()){
-                        Integer.parseInt(Eyear);
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage() + "is not a valid year!");
-                    return;
-                }
-                String category = ExhibitsCategory.getText();
-                if (category.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Your Exhibit must have a category!");
-                    return;
-                }
-                if (ExhibitsGid.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Your activity must have an Gid!");
-                    return;
-                }
-                Integer Gid = null;
-                try {
-                    Gid = Integer.parseInt(ExhibitsGid.getText());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage() + "is not a valid Gid!");
-                    return;
-                }
-                String Emuseum = (String) ExhibitsMuseumDropDown.getItemAt(ExhibitsMuseumDropDown.getSelectedIndex());
-                String EexhibitionHall = (String) ExhibitsExhibitionHallDropDown.getItemAt(ExhibitsExhibitionHallDropDown.getSelectedIndex());
-
-
-                JOptionPane.showMessageDialog(null,
-                        " Eid: " + Eid +"Ename: " + Ename + " birth: "
-                                + birthplace + " Eyear: "+Eyear + " category: "+ category
-                                +" Gid: "+ Gid + " Museum: "+Emuseum + " ExhibtionHall: "+ EexhibitionHall);
+                int Zid = dbhandler.getId("SELECT ZID FROM EXHIBITIONHALL\n" +
+                        "WHERE ZNAME = \'" + AexhibitionHall + "\'");
+                dbhandler.insert("INSERT INTO Activity VALUES (" + Aid + ", \'" + title + "\', \'" +
+                        Adate + "\', " + Zid + ")");
+                main.dipo();
+                dispose();
                 break;
             case ADD_SOUVENIR_ACTION:
                 if (SouvenirSid.getText().isEmpty()) {
@@ -371,12 +306,10 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, ex.getMessage() + "is not a valid price!");
                     return;
                 }
-
-
                 JOptionPane.showMessageDialog(null,
                         " Sid: " + Sid +"Sname: " + Sname + " price: "+price);
 
-                new InsertQueryFrame("Souvenir More Info",null);
+                new InsertQueryFrame("Souvenir More Info",dbhandler,main);
 
                 break;
             case ADD_FILM_ACTION:
@@ -412,7 +345,7 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null,
                         " Fid: " + Fid +"Fname: " + Fname + " Ftime: "+Ftime);
 
-                new InsertQueryFrame("Film More Info",null);
+                new InsertQueryFrame("Film More Info",dbhandler, main);
 
                 break;
             case SOUVENIR_MORE_ACTION:
@@ -461,9 +394,5 @@ public class InsertQueryFrame extends JFrame implements ActionListener {
                 break;
         }
 
-    }
-
-    public static void main(String[] args) {
-        new InsertQueryFrame("Souvenir",null);
     }
 }
